@@ -21,10 +21,3 @@ cmake-run: cmake
 cmake-init:
 	cmake -S . -B $(BUILDDIR) -G Ninja
 
-# clang-tidy ueber die Compile-Datenbank aus build/.
-# cmake-init stellt sicher, dass build/compile_commands.json existiert.
-cmake-tidy: cmake-init
-	@echo "----------------------------"
-	@echo "Prüfen auf Speicherfehler..."
-	@echo "----------------------------"
-	clang-tidy -p $(BUILDDIR) lib3d/*.c app/*.c
