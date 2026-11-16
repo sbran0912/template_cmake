@@ -1,24 +1,23 @@
 # Build
 
-Voraussetzungen: CMake, Ninja, GLFW, OpenGL sowie beide Compiler (clang und gcc).
+Voraussetzungen: CMake, Ninja, GLFW, OpenGL und gcc.
 
-Es gibt zwei parallele Builds, die sich nicht gegenseitig stören:
+Es gibt nur noch einen Build:
 
-| Build       | Compiler | Ausgabe         | Artefakt-Verzeichnis |
-| ----------- | -------- | --------------- | -------------------- |
-| CMake/Ninja | clang    | `build/path3d`  | `build/`             |
-| Make        | gcc      | `bin/path3d`    | `bin/`, `obj/`       |
+| Build       | Compiler | Ausgabe        | Artefakt-Verzeichnis |
+| ----------- | -------- | -------------- | -------------------- |
+| CMake/Ninja | gcc      | `build/snake`  | `build/`             |
 
-## CMake + Ninja (clang)
+## CMake + Ninja
 
-Aus dem Projektverzeichnis `path3d_c` heraus:
+Aus dem Projektverzeichnis heraus:
 
 ```sh
 cmake -S . -B build -G Ninja
 cmake --build build
 ```
 
-Das Binary liegt danach unter `build/path3d`.
+Das Binary liegt danach unter `build/snake`.
 
 Nach Code-Änderungen genügt:
 
@@ -41,45 +40,35 @@ neu konfigurieren.
 Neu konfigurieren (`cmake -S . -B build -G Ninja`) muss man nur, wenn sich
 `CMakeLists.txt` ändert, neue Dateien hinzukommen oder `build/` gelöscht wurde.
 
-> Hinweis: Der Compiler ist in `CMakeLists.txt` fest auf `clang` gesetzt. Ein
+> Hinweis: Der Compiler ist in `CMakeLists.txt` fest auf `gcc` gesetzt. Ein
 > bereits mit einem anderen Compiler konfiguriertes `build/` muss vorher
 > gelöscht werden (`rm -rf build`). Überschreiben lässt sich der Compiler mit
 > `-DCMAKE_C_COMPILER=...`.
 
-## Make (gcc)
+## Make (nur noch Wrapper um CMake)
+
+Das Makefile baut nicht mehr selbst, sondern ruft nur noch CMake auf:
 
 ```sh
-make              # baut bin/path3d
-make run          # baut bei Bedarf und startet bin/path3d
-make clean        # entfernt bin/ und obj/
-```
-
-## Make (Targets für den CMake-Build)
-
-Alternativ lässt sich der CMake/Ninja-Build (clang) auch über das Makefile anstoßen:
-
-```sh
-make cmake        # konfiguriert (Release) und baut build/path3d
-make cmake-debug  # konfiguriert (Debug) und baut build/path3d
+make              # konfiguriert (Release) und baut build/snake
+make cmake-debug  # konfiguriert (Debug) und baut build/snake
 make cmake-init   # konfiguriert (cmake -S . -B build -G Ninja)
-make cmake-run    # baut und startet build/path3d
+make cmake-run    # baut und startet build/snake
 make cmake-clean  # entfernt build/
 ```
-
-`make` bleibt dabei weiterhin der gcc-Build nach `bin/path3d`.
 
 ## Starten
 
 ```sh
-./build/path3d     # clang-Build
-./bin/path3d       # gcc-Build
+./build/snake
 ```
 
-Beide öffnen ein GLFW/OpenGL-Fenster und brauchen daher eine grafische Umgebung.
+Das Programm öffnet ein GLFW/OpenGL-Fenster und braucht daher eine grafische
+Umgebung.
 
 ## Editor / clangd
 
-Der CMake-Build erzeugt `build/compile_commands.json` (clang). Damit clangd
+Der CMake-Build erzeugt `build/compile_commands.json` (gcc). Damit clangd
 die Compile-Flags automatisch findet, verweist die Datei `.clangd` im
 Projektwurzelverzeichnis auf dieses Verzeichnis:
 

@@ -1,6 +1,6 @@
 BUILDDIR = build
 APPNAME  = snake 
-.PHONY: cmake cmake-debug cmake-clean cmake-run cmake-init cmake-tidy
+.PHONY: cmake cmake-debug cmake-clean cmake-run cmake-init
 
 # cmake builds
 cmake:
