@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 # Fester Compiler: gcc. (Der parallele Makefile-Build kompiliert mit gcc.)
 # Achtung: greift nur beim ersten Konfigurieren - ein bereits mit gcc
 # konfiguriertes build/ muss vorher geloescht werden.
-set(CMAKE_C_COMPILER gcc)
+set(CMAKE_C_COMPILER clang-22)
 
 project(template C)
 
@@ -18,15 +18,18 @@ endif()
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g3")
 set(CMAKE_C_FLAGS_RELEASE "-O2 -DNDEBUG")
 
-# Gleiche Sprachversion wie im Makefile: striktes C17 (-std=c17).
-set(CMAKE_C_STANDARD 17)
+# Sprachversion C23 (-std=c23).
+set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
 # Beim Konfigurieren compile_commands.json fuer clangd erzeugen.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(snake
+# Zentraler Target-Name.
+set(APP_TARGET snake)
+
+add_executable(${APP_TARGET}
     lib3d/glcore.c
     lib3d/lib3d_util.c
     lib3d/lib3d.c
@@ -35,13 +38,13 @@ add_executable(snake
     app/main.c
 )
 
-target_include_directories(snake PRIVATE
+target_include_directories(${APP_TARGET} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/lib3d
 )
 
-target_compile_options(snake PRIVATE -Wall -Wextra)
+target_compile_options(${APP_TARGET} PRIVATE -Wall -Wextra)
 
 find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
-target_link_libraries(snake PRIVATE glfw OpenGL::GL m)
+target_link_libraries(${APP_TARGET} PRIVATE glfw OpenGL::GL m)
